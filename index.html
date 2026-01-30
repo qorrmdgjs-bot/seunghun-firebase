@@ -1,14 +1,261 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>사주풀이 - 나의 운명의 흐름을 읽다</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+  <div class="container">
+    <!-- 헤더 -->
+    <header class="header">
+      <div class="header-decoration"></div>
+      <button class="theme-toggle" id="themeToggle" aria-label="테마 변경">
+        <span class="theme-icon light-icon">🌙</span>
+        <span class="theme-icon dark-icon">☀️</span>
+      </button>
+      <h1 class="title">사주풀이</h1>
+      <p class="subtitle">나의 운명의 흐름을 읽다</p>
+      <p class="philosophy">통계적 경향과 가능성의 관점에서 바라보는 명리학</p>
+    </header>
+
+    <!-- 입력 섹션 -->
+    <section class="input-section" id="inputSection">
+      <h2 class="section-title">생년월일시 입력</h2>
+
+      <form id="sajuForm" class="saju-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="birthYear">출생년도</label>
+            <input type="number" id="birthYear" min="1900" max="2100" placeholder="예: 1990" required>
+          </div>
+          <div class="form-group">
+            <label for="birthMonth">월</label>
+            <select id="birthMonth" required>
+              <option value="">선택</option>
+              <option value="1">1월</option>
+              <option value="2">2월</option>
+              <option value="3">3월</option>
+              <option value="4">4월</option>
+              <option value="5">5월</option>
+              <option value="6">6월</option>
+              <option value="7">7월</option>
+              <option value="8">8월</option>
+              <option value="9">9월</option>
+              <option value="10">10월</option>
+              <option value="11">11월</option>
+              <option value="12">12월</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="birthDay">일</label>
+            <input type="number" id="birthDay" min="1" max="31" placeholder="예: 15" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="birthHour">출생 시간 (24시간)</label>
+            <select id="birthHour">
+              <option value="">모름 / 미입력</option>
+              <option value="0">00시 (자시 子時)</option>
+              <option value="1">01시 (축시 丑時)</option>
+              <option value="2">02시</option>
+              <option value="3">03시 (인시 寅時)</option>
+              <option value="4">04시</option>
+              <option value="5">05시 (묘시 卯時)</option>
+              <option value="6">06시</option>
+              <option value="7">07시 (진시 辰時)</option>
+              <option value="8">08시</option>
+              <option value="9">09시 (사시 巳時)</option>
+              <option value="10">10시</option>
+              <option value="11">11시 (오시 午時)</option>
+              <option value="12">12시</option>
+              <option value="13">13시 (미시 未時)</option>
+              <option value="14">14시</option>
+              <option value="15">15시 (신시 申時)</option>
+              <option value="16">16시</option>
+              <option value="17">17시 (유시 酉時)</option>
+              <option value="18">18시</option>
+              <option value="19">19시 (술시 戌時)</option>
+              <option value="20">20시</option>
+              <option value="21">21시 (해시 亥時)</option>
+              <option value="22">22시</option>
+              <option value="23">23시 (자시 子時)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="calendarType">양력/음력</label>
+            <select id="calendarType">
+              <option value="solar">양력</option>
+              <option value="lunar">음력</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>성별</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="gender" value="male" required>
+                <span class="radio-custom"></span>
+                남성
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="gender" value="female">
+                <span class="radio-custom"></span>
+                여성
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          <span class="btn-text">사주 분석하기</span>
+          <span class="btn-icon">☯</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- 로딩 표시 -->
+    <div class="loading" id="loading">
+      <div class="loading-spinner"></div>
+      <p>사주를 분석하고 있습니다...</p>
+    </div>
+
+    <!-- 결과 섹션 -->
+    <section class="result-section" id="resultSection" style="display: none;">
+
+      <!-- 사주 구성표 -->
+      <div class="result-card" id="pillarsCard">
+        <h2 class="section-title">사주팔자 (四柱八字)</h2>
+        <div class="pillars-container" id="pillarsContainer">
+          <!-- 동적 생성 -->
+        </div>
+      </div>
+
+      <!-- 오행 분포 -->
+      <div class="result-card" id="elementsCard">
+        <h2 class="section-title">오행 분포 (五行分布)</h2>
+        <div class="elements-chart" id="elementsChart">
+          <!-- 동적 생성 -->
+        </div>
+        <div class="yin-yang-balance" id="yinYangBalance">
+          <!-- 동적 생성 -->
+        </div>
+      </div>
+
+      <!-- 3대 관점 분석 -->
+      <div class="result-card" id="analysisCard">
+        <h2 class="section-title">3대 관점 분석</h2>
+
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="career">
+            <span class="tab-icon">💼</span>
+            직업/재능
+          </button>
+          <button class="tab-btn" data-tab="wealth">
+            <span class="tab-icon">💰</span>
+            재물/금전
+          </button>
+          <button class="tab-btn" data-tab="relationship">
+            <span class="tab-icon">💝</span>
+            인간관계
+          </button>
+        </div>
+
+        <div class="tab-content active" id="careerTab">
+          <!-- 동적 생성 -->
+        </div>
+        <div class="tab-content" id="wealthTab">
+          <!-- 동적 생성 -->
+        </div>
+        <div class="tab-content" id="relationshipTab">
+          <!-- 동적 생성 -->
+        </div>
+      </div>
+
+      <!-- 대운/세운 타임라인 -->
+      <div class="result-card" id="fortuneCard">
+        <h2 class="section-title">시간의 흐름 분석</h2>
+
+        <div class="fortune-section">
+          <h3 class="subsection-title">대운 (大運) - 10년 단위 흐름</h3>
+          <div class="daeun-timeline" id="daeunTimeline">
+            <!-- 동적 생성 -->
+          </div>
+        </div>
+
+        <div class="fortune-section">
+          <h3 class="subsection-title">올해의 운세 (歲運)</h3>
+          <div class="saeun-info" id="saeunInfo">
+            <!-- 동적 생성 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 오늘의 사주 팁 -->
+      <div class="result-card" id="dailyTipCard">
+        <h2 class="section-title">오늘의 사주 팁</h2>
+        <div class="daily-tip" id="dailyTip">
+          <!-- 동적 생성 -->
+        </div>
+      </div>
+
+      <!-- 통합 비주얼 이미지 -->
+      <div class="result-card" id="visualCard">
+        <h2 class="section-title">나의 사주 여정</h2>
+        <div class="visual-container" id="visualContainer">
+          <canvas id="journeyCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- 저장/공유 버튼 -->
+      <div class="action-buttons">
+        <button class="action-btn" id="downloadImageBtn">
+          <span class="btn-icon">📷</span>
+          이미지 저장
+        </button>
+        <button class="action-btn" id="saveLocalBtn">
+          <span class="btn-icon">💾</span>
+          결과 저장
+        </button>
+        <button class="action-btn secondary" id="newAnalysisBtn">
+          <span class="btn-icon">🔄</span>
+          새로운 분석
+        </button>
+      </div>
+
+    </section>
+
+    <!-- 용어 해설 팝업 -->
+    <div class="tooltip-popup" id="tooltipPopup">
+      <div class="tooltip-content">
+        <button class="tooltip-close" id="tooltipClose">&times;</button>
+        <h3 class="tooltip-title" id="tooltipTitle"></h3>
+        <p class="tooltip-text" id="tooltipText"></p>
+      </div>
+    </div>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+      <p class="disclaimer">
+        ※ 본 사주풀이는 통계적 경향성을 바탕으로 한 참고 자료입니다.<br>
+        미래는 고정된 것이 아닌 가능성의 흐름이며, 개인의 노력과 선택에 따라 달라질 수 있습니다.
+      </p>
+      <p class="copyright">
+        &copy; 2024 사주풀이. 명리학의 지혜를 현대적으로 해석합니다.
+      </p>
+    </footer>
+  </div>
+
+  <!-- 스크립트 로드 -->
+  <script src="/saju-engine.js"></script>
+  <script src="/saju-interpreter.js"></script>
+  <script src="/image-generator.js"></script>
+  <script src="/main.js"></script>
 </body>
 </html>
