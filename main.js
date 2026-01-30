@@ -73,18 +73,16 @@
   }
 
   /**
-   * 테마 초기화
+   * 테마 초기화 - 다크모드가 기본값
    */
   function initTheme() {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
       document.documentElement.setAttribute('data-theme', savedTheme);
+    } else {
+      // 저장된 테마가 없으면 다크모드를 기본값으로 설정
+      document.documentElement.setAttribute('data-theme', 'dark');
     }
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-      if (!localStorage.getItem('theme')) {
-        document.documentElement.removeAttribute('data-theme');
-      }
-    });
   }
 
   /**
