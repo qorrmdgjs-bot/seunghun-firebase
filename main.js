@@ -12,20 +12,34 @@
     inputSection: document.getElementById('inputSection'),
     loading: document.getElementById('loading'),
     resultSection: document.getElementById('resultSection'),
-    pillarsContainer: document.getElementById('pillarsContainer'),
-    elementsChart: document.getElementById('elementsChart'),
-    yinYangBalance: document.getElementById('yinYangBalance'),
-    careerTab: document.getElementById('careerTab'),
-    wealthTab: document.getElementById('wealthTab'),
-    relationshipTab: document.getElementById('relationshipTab'),
-    daeunTimeline: document.getElementById('daeunTimeline'),
-    saeunInfo: document.getElementById('saeunInfo'),
+    // 요약 카드
+    summaryIcon: document.getElementById('summaryIcon'),
+    summaryTitle: document.getElementById('summaryTitle'),
+    summarySubtitle: document.getElementById('summarySubtitle'),
+    summaryDescription: document.getElementById('summaryDescription'),
+    // 커리어 카드
+    careerStrengths: document.getElementById('careerStrengths'),
+    careerActions: document.getElementById('careerActions'),
+    careerAvoid: document.getElementById('careerAvoid'),
+    careerTags: document.getElementById('careerTags'),
+    // 재물 카드
+    wealthProfile: document.getElementById('wealthProfile'),
+    wealthActions: document.getElementById('wealthActions'),
+    wealthAvoid: document.getElementById('wealthAvoid'),
+    // 인간관계 카드
+    relationshipProfile: document.getElementById('relationshipProfile'),
+    relationshipActions: document.getElementById('relationshipActions'),
+    compatibilityList: document.getElementById('compatibilityList'),
+    relationshipAvoid: document.getElementById('relationshipAvoid'),
+    // 운세 카드
+    fortuneSummary: document.getElementById('fortuneSummary'),
+    yearlyActions: document.getElementById('yearlyActions'),
+    // 오늘의 팁
     dailyTip: document.getElementById('dailyTip'),
-    visualContainer: document.getElementById('visualContainer'),
-    journeyCanvas: document.getElementById('journeyCanvas'),
-    downloadImageBtn: document.getElementById('downloadImageBtn'),
+    // 버튼
     saveLocalBtn: document.getElementById('saveLocalBtn'),
     newAnalysisBtn: document.getElementById('newAnalysisBtn'),
+    // 기타
     tooltipPopup: document.getElementById('tooltipPopup'),
     tooltipClose: document.getElementById('tooltipClose'),
     tooltipTitle: document.getElementById('tooltipTitle'),
@@ -36,40 +50,18 @@
   // 현재 분석 결과 저장
   let currentResult = null;
 
-  // 오행 색상 매핑
-  const elementColors = {
-    '목': '#4CAF50',
-    '화': '#F44336',
-    '토': '#FFC107',
-    '금': '#9E9E9E',
-    '수': '#2196F3'
-  };
-
-  const elementIcons = {
-    '목': '🌳',
-    '화': '🔥',
-    '토': '🏔️',
-    '금': '⚔️',
-    '수': '💧'
-  };
-
-  const elementClasses = {
-    '목': 'wood',
-    '화': 'fire',
-    '토': 'earth',
-    '금': 'metal',
-    '수': 'water'
-  };
-
-  // 용어 해설 데이터
-  const termDefinitions = {
-    '천간': '하늘의 기운을 나타내는 10개의 글자 (갑을병정무기경신임계)입니다. 사주에서 외면적 특성과 활동성을 나타내는 경향이 있습니다.',
-    '지지': '땅의 기운을 나타내는 12개의 글자 (자축인묘진사오미신유술해)입니다. 12간지라고도 하며, 내면적 특성과 잠재력을 나타내는 경향이 있습니다.',
-    '오행': '목(木), 화(火), 토(土), 금(金), 수(水)의 다섯 가지 기운입니다. 만물의 구성 요소이자 변화의 원리를 나타냅니다.',
-    '일간': '일주의 천간으로, 사주에서 본인 자신을 나타냅니다. 성격과 기질의 핵심이 되는 요소입니다.',
-    '대운': '10년 단위로 바뀌는 큰 운의 흐름입니다. 인생의 큰 방향성과 기회를 나타내는 경향이 있습니다.',
-    '세운': '해마다 바뀌는 운의 흐름입니다. 그 해의 전체적인 분위기와 경향을 나타냅니다.',
-    '음양': '우주의 상반된 두 기운입니다. 양(陽)은 활동적, 외향적, 적극적 성향을, 음(陰)은 수용적, 내향적, 신중한 성향을 나타냅니다.'
+  // 일간 아이콘 및 타입 매핑
+  const dayMasterTypes = {
+    '갑': { icon: '🌲', type: '개척자형 리더', color: '#00FF88' },
+    '을': { icon: '🌿', type: '유연한 전략가', color: '#4CAF50' },
+    '병': { icon: '☀️', type: '열정적인 리더', color: '#FF3366' },
+    '정': { icon: '🕯️', type: '섬세한 창작자', color: '#FF6B8A' },
+    '무': { icon: '⛰️', type: '신뢰받는 중재자', color: '#FFD600' },
+    '기': { icon: '🏡', type: '현실적인 관리자', color: '#FFC107' },
+    '경': { icon: '⚔️', type: '결단력 있는 실행가', color: '#C0C0C0' },
+    '신': { icon: '💎', type: '완벽주의 분석가', color: '#E0E0E0' },
+    '임': { icon: '🌊', type: '지혜로운 혁신가', color: '#00D4FF' },
+    '계': { icon: '💧', type: '감성적인 사색가', color: '#42A5F5' }
   };
 
   /**
@@ -77,7 +69,6 @@
    */
   function init() {
     setupEventListeners();
-    checkSavedResult();
     initTheme();
   }
 
@@ -89,10 +80,8 @@
     if (savedTheme) {
       document.documentElement.setAttribute('data-theme', savedTheme);
     }
-    // 시스템 테마 변경 감지
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
       if (!localStorage.getItem('theme')) {
-        // 사용자가 수동으로 테마를 설정하지 않은 경우에만 시스템 테마 따름
         document.documentElement.removeAttribute('data-theme');
       }
     });
@@ -111,7 +100,6 @@
     } else if (currentTheme === 'light') {
       newTheme = 'dark';
     } else {
-      // 시스템 테마를 따르고 있는 경우, 반대 테마로 설정
       newTheme = systemPrefersDark ? 'light' : 'dark';
     }
 
@@ -123,55 +111,14 @@
    * 이벤트 리스너 설정
    */
   function setupEventListeners() {
-    // 폼 제출
     elements.form.addEventListener('submit', handleFormSubmit);
-
-    // 탭 버튼
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', handleTabClick);
-    });
-
-    // 액션 버튼
-    elements.downloadImageBtn.addEventListener('click', handleDownloadImage);
     elements.saveLocalBtn.addEventListener('click', handleSaveLocal);
     elements.newAnalysisBtn.addEventListener('click', handleNewAnalysis);
-
-    // 테마 토글
     elements.themeToggle.addEventListener('click', toggleTheme);
-
-    // 툴팁
     elements.tooltipClose.addEventListener('click', closeTooltip);
     elements.tooltipPopup.addEventListener('click', (e) => {
-      if (e.target === elements.tooltipPopup) {
-        closeTooltip();
-      }
+      if (e.target === elements.tooltipPopup) closeTooltip();
     });
-
-    // 용어 힌트 클릭
-    document.addEventListener('click', (e) => {
-      if (e.target.classList.contains('term-hint')) {
-        const term = e.target.dataset.term;
-        if (term && termDefinitions[term]) {
-          showTooltip(term, termDefinitions[term]);
-        }
-      }
-    });
-  }
-
-  /**
-   * 저장된 결과 확인
-   */
-  function checkSavedResult() {
-    const saved = localStorage.getItem('sajuResult');
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        // 저장된 결과가 있으면 자동 표시하지 않고 사용자가 선택하게 함
-        console.log('저장된 사주 결과가 있습니다.');
-      } catch (e) {
-        console.error('저장된 결과 파싱 오류:', e);
-      }
-    }
   }
 
   /**
@@ -189,12 +136,7 @@
       gender: document.querySelector('input[name="gender"]:checked').value
     };
 
-    // 유효성 검사
-    if (!validateFormData(formData)) {
-      return;
-    }
-
-    // 분석 시작
+    if (!validateFormData(formData)) return;
     analyzeSaju(formData);
   }
 
@@ -206,19 +148,15 @@
       alert('출생년도는 1900년부터 2100년 사이로 입력해주세요.');
       return false;
     }
-
     if (data.day < 1 || data.day > 31) {
       alert('올바른 날짜를 입력해주세요.');
       return false;
     }
-
-    // 월별 일수 체크
     const daysInMonth = new Date(data.year, data.month, 0).getDate();
     if (data.day > daysInMonth) {
       alert(`${data.month}월은 ${daysInMonth}일까지만 있습니다.`);
       return false;
     }
-
     return true;
   }
 
@@ -226,50 +164,29 @@
    * 사주 분석 실행
    */
   function analyzeSaju(formData) {
-    // 로딩 표시
     showLoading();
 
-    // 비동기 처리 시뮬레이션 (실제로는 즉시 계산됨)
     setTimeout(() => {
       try {
-        // 사주 계산
         const saju = SajuEngine.calculateSaju(
-          formData.year,
-          formData.month,
-          formData.day,
-          formData.hour,
-          formData.gender
+          formData.year, formData.month, formData.day,
+          formData.hour, formData.gender
         );
 
-        // 대운 계산
         const daeun = SajuEngine.calculateDaeun(
-          saju,
-          formData.year,
-          formData.month,
-          formData.day,
-          formData.gender
+          saju, formData.year, formData.month,
+          formData.day, formData.gender
         );
 
-        // 해석 생성
         const interpretation = SajuInterpreter.generateInterpretation(saju, daeun);
-
-        // 오늘의 팁 생성
         const dailyTip = SajuInterpreter.generateDailyTip(saju);
 
-        // 결과 저장
         currentResult = {
-          formData,
-          saju,
-          daeun,
-          interpretation,
-          dailyTip,
+          formData, saju, daeun, interpretation, dailyTip,
           analyzedAt: new Date().toISOString()
         };
 
-        // 결과 표시
         displayResults(currentResult);
-
-        // 로딩 숨기기
         hideLoading();
 
       } catch (error) {
@@ -277,314 +194,433 @@
         alert('사주 분석 중 오류가 발생했습니다. 다시 시도해주세요.');
         hideLoading();
       }
-    }, 1500); // 1.5초 딜레이로 로딩 경험 제공
+    }, 1500);
   }
 
   /**
    * 결과 표시
    */
   function displayResults(result) {
-    const { saju, daeun, interpretation, dailyTip, formData } = result;
+    const { saju, interpretation, dailyTip } = result;
 
-    // 섹션 전환
     elements.inputSection.style.display = 'none';
     elements.resultSection.style.display = 'block';
 
-    // 각 섹션 렌더링
-    renderPillars(saju.pillars);
-    renderElementsChart(saju.elementDistribution);
-    renderYinYangBalance(saju.yinYangBalance, interpretation.basic.yinYang.description);
-    renderCareerTab(interpretation.career, interpretation.basic);
-    renderWealthTab(interpretation.wealth);
-    renderRelationshipTab(interpretation.relationship);
-    renderDaeunTimeline(daeun, formData.year);
-    renderSaeunInfo(interpretation.timing.currentYear);
+    renderSummary(saju, interpretation);
+    renderCareerCard(interpretation);
+    renderWealthCard(interpretation);
+    renderRelationshipCard(interpretation);
+    renderFortuneCard(interpretation);
     renderDailyTip(dailyTip);
-    renderJourneyImage(saju, interpretation, daeun);
 
-    // 스크롤 상단으로
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   /**
-   * 사주 기둥 렌더링
+   * 요약 카드 렌더링
    */
-  function renderPillars(pillars) {
-    const pillarNames = ['시주', '일주', '월주', '연주'];
-    const pillarData = [pillars.hour, pillars.day, pillars.month, pillars.year];
+  function renderSummary(saju, interpretation) {
+    const dayMaster = saju.dayMaster;
+    const typeInfo = dayMasterTypes[dayMaster.name];
+    const basic = interpretation.basic;
 
-    let html = '';
-
-    pillarData.forEach((pillar, index) => {
-      if (pillar) {
-        const stemElement = pillar.stem.element;
-        const branchElement = pillar.branch.element;
-
-        html += `
-          <div class="pillar element-bg-${elementClasses[stemElement]}">
-            <div class="pillar-name">${pillarNames[index]}</div>
-            <div class="pillar-stem element-${elementClasses[stemElement]}">${pillar.stem.hanja}</div>
-            <div class="pillar-stem-name">${pillar.stem.name} (${stemElement})</div>
-            <div class="pillar-branch element-${elementClasses[branchElement]}">${pillar.branch.hanja}</div>
-            <div class="pillar-branch-name">${pillar.branch.name} (${pillar.branch.animal})</div>
-          </div>
-        `;
-      } else {
-        html += `
-          <div class="pillar">
-            <div class="pillar-name">${pillarNames[index]}</div>
-            <div class="pillar-empty">시간 미입력</div>
-          </div>
-        `;
-      }
-    });
-
-    elements.pillarsContainer.innerHTML = html;
+    elements.summaryIcon.textContent = typeInfo.icon;
+    elements.summarySubtitle.textContent = typeInfo.type;
+    elements.summaryDescription.textContent = basic.dayMaster.traits[0];
   }
 
   /**
-   * 오행 분포 차트 렌더링
+   * 커리어 카드 렌더링
    */
-  function renderElementsChart(distribution) {
-    const elementList = ['목', '화', '토', '금', '수'];
-    const total = Object.values(distribution).reduce((a, b) => a + b, 0) || 1;
+  function renderCareerCard(interpretation) {
+    const career = interpretation.career;
+    const basic = interpretation.basic;
 
-    let html = '';
+    // 강점 그리드
+    const strengths = [
+      { title: '핵심 성향', desc: basic.dayMaster.traits[0] },
+      { title: '업무 스타일', desc: basic.dayMaster.traits[1] || basic.dayMaster.traits[0] },
+      { title: '리더십', desc: career.aptitudes.leadership.description },
+      { title: '창의성', desc: career.aptitudes.creativity.description }
+    ];
 
-    elementList.forEach(element => {
-      const count = distribution[element];
-      const percentage = (count / total) * 100;
-      const height = Math.max(10, percentage);
+    elements.careerStrengths.innerHTML = strengths.map(s => `
+      <div class="strength-item">
+        <h4>${s.title}</h4>
+        <p>${s.desc}</p>
+      </div>
+    `).join('');
 
-      html += `
-        <div class="element-bar">
-          <div class="element-bar-container">
-            <div class="element-bar-fill" style="height: ${height}%; background-color: ${elementColors[element]};"></div>
-          </div>
-          <div class="element-icon">${elementIcons[element]}</div>
-          <div class="element-name">${element}</div>
-          <div class="element-count">${count}개</div>
-        </div>
-      `;
-    });
-
-    elements.elementsChart.innerHTML = html;
-
-    // 애니메이션을 위해 약간의 딜레이 후 높이 설정
-    setTimeout(() => {
-      document.querySelectorAll('.element-bar-fill').forEach(bar => {
-        bar.style.height = bar.style.height;
-      });
-    }, 100);
-  }
-
-  /**
-   * 음양 밸런스 렌더링
-   */
-  function renderYinYangBalance(yinYang, description) {
-    elements.yinYangBalance.innerHTML = `
-      <div class="yin-yang-container">
-        <div class="yin-section">
-          <div class="yin-yang-label">음 (陰)</div>
-          <div class="yin-yang-value">${yinYang.yin}</div>
-        </div>
-        <div class="yang-section">
-          <div class="yin-yang-label">양 (陽)</div>
-          <div class="yin-yang-value">${yinYang.yang}</div>
+    // 액션 플랜
+    const actions = generateCareerActions(career, basic);
+    elements.careerActions.innerHTML = actions.map((action, i) => `
+      <div class="action-item">
+        <div class="action-number">${i + 1}</div>
+        <div class="action-content">
+          <h4>${action.title}</h4>
+          <p>${action.desc}</p>
         </div>
       </div>
-      <div class="yin-yang-description">${description}</div>
-    `;
+    `).join('');
+
+    // 피해야 할 것
+    const avoids = generateCareerAvoids(career, basic);
+    elements.careerAvoid.innerHTML = avoids.map(avoid => `
+      <div class="avoid-item">
+        <span class="avoid-icon">🚫</span>
+        <p>${avoid}</p>
+      </div>
+    `).join('');
+
+    // 추천 직업군
+    elements.careerTags.innerHTML = career.recommendedCareers.map(c =>
+      `<span class="career-tag">${c}</span>`
+    ).join('');
   }
 
   /**
-   * 직업/재능 탭 렌더링
+   * 커리어 액션 플랜 생성
    */
-  function renderCareerTab(career, basic) {
-    const dayMaster = basic.dayMaster;
+  function generateCareerActions(career, basic) {
+    const actions = [];
+    const apt = career.aptitudes;
 
-    let aptitudesHtml = '';
-    const aptitudeLabels = {
-      leadership: '리더십',
-      creativity: '창의성',
-      analytical: '분석력',
-      social: '사교성'
-    };
-
-    for (const [key, value] of Object.entries(career.aptitudes)) {
-      aptitudesHtml += `
-        <div class="aptitude-item">
-          <div class="aptitude-label">${aptitudeLabels[key]}</div>
-          <div class="aptitude-level ${value.level}">${value.level === 'strong' ? '강함' : value.level === 'moderate' ? '보통' : '약함'}</div>
-        </div>
-      `;
+    if (apt.leadership.level === 'strong') {
+      actions.push({
+        title: '리더십 포지션을 적극적으로 노려보세요',
+        desc: '팀 리드, 프로젝트 매니저 등 사람을 이끄는 역할에서 당신의 능력이 빛날 수 있습니다. 작은 프로젝트부터 리딩 경험을 쌓아보세요.'
+      });
+    } else {
+      actions.push({
+        title: '전문성을 깊이 있게 파고드세요',
+        desc: '특정 분야의 전문가로 성장하는 것이 당신에게 더 맞을 수 있습니다. 한 분야를 깊이 있게 공부하고 경험을 쌓으세요.'
+      });
     }
 
-    let careersHtml = '';
-    career.recommendedCareers.forEach(c => {
-      careersHtml += `<span class="career-tag">${c}</span>`;
+    if (apt.creativity.level === 'strong') {
+      actions.push({
+        title: '창의적인 프로젝트에 참여하세요',
+        desc: '새로운 아이디어를 내고 실험할 수 있는 환경에서 일하세요. 사이드 프로젝트나 창작 활동을 시작해보는 것도 좋습니다.'
+      });
+    }
+
+    if (apt.analytical.level === 'strong') {
+      actions.push({
+        title: '데이터 기반 의사결정 역량을 키우세요',
+        desc: '분석력이 뛰어난 당신에게 데이터 분석, 전략 기획 등의 역할이 어울립니다. 관련 스킬을 체계적으로 학습하세요.'
+      });
+    }
+
+    if (apt.social.level === 'strong') {
+      actions.push({
+        title: '네트워킹에 투자하세요',
+        desc: '사람을 통해 기회가 옵니다. 업계 모임, 컨퍼런스에 적극적으로 참여하고 인맥을 넓혀보세요.'
+      });
+    }
+
+    actions.push({
+      title: '3개월 단위 목표를 세우세요',
+      desc: '장기 목표를 3개월 단위로 쪼개서 실행하세요. 분기마다 성과를 점검하고 방향을 조정하는 습관을 들이세요.'
     });
 
-    elements.careerTab.innerHTML = `
-      <div class="analysis-section">
-        <h3 class="analysis-title">🎯 타고난 기질</h3>
-        <p class="analysis-content">
-          <strong>${dayMaster.name}</strong> - ${dayMaster.symbol}의 기운을 가지고 계십니다.
-        </p>
-        <ul class="analysis-list">
-          ${dayMaster.traits.map(t => `<li>${t}</li>`).join('')}
-        </ul>
-      </div>
+    return actions.slice(0, 4);
+  }
 
-      <div class="analysis-section">
-        <h3 class="analysis-title">📊 적성 분석</h3>
-        <div class="aptitude-grid">
-          ${aptitudesHtml}
+  /**
+   * 커리어 피해야 할 것 생성
+   */
+  function generateCareerAvoids(career, basic) {
+    const avoids = [basic.dayMaster.caution];
+
+    if (career.aptitudes.leadership.level === 'weak') {
+      avoids.push('준비 없이 리더 역할을 맡는 것 - 충분한 경험을 쌓은 후에 도전하세요');
+    }
+
+    if (career.aptitudes.social.level === 'weak') {
+      avoids.push('과도한 네트워킹 의무가 있는 직무 - 당신의 에너지를 빠르게 소진시킬 수 있습니다');
+    }
+
+    avoids.push('명확한 목표 없이 이직하는 것 - 최소 6개월은 다음 스텝을 고민하세요');
+
+    return avoids.slice(0, 3);
+  }
+
+  /**
+   * 재물 카드 렌더링
+   */
+  function renderWealthCard(interpretation) {
+    const wealth = interpretation.wealth;
+
+    // 재물 프로필
+    const wealthTypes = {
+      strong: { icon: '💰', type: '재물 축적형', desc: '돈을 모으고 불리는 재능이 있습니다' },
+      moderate: { icon: '⚖️', type: '균형 관리형', desc: '수입과 지출의 균형을 잘 맞추는 편입니다' },
+      weak: { icon: '💸', type: '흐름 중시형', desc: '돈보다 경험과 가치를 중시하는 성향입니다' }
+    };
+    const wType = wealthTypes[wealth.accumulation.level];
+
+    elements.wealthProfile.innerHTML = `
+      <div class="profile-type">
+        <div class="profile-type-icon">${wType.icon}</div>
+        <div class="profile-type-text">
+          <h4>${wType.type}</h4>
+          <p>${wType.desc}</p>
         </div>
       </div>
+      <p class="profile-description">${wealth.accumulation.description}</p>
+    `;
 
-      <div class="analysis-section">
-        <h3 class="analysis-title">💼 어울리는 직업군</h3>
-        <p class="analysis-content">통계적으로 다음 분야에서 적성을 발휘할 가능성이 있습니다:</p>
-        <div class="career-tags">
-          ${careersHtml}
+    // 액션 플랜
+    const actions = generateWealthActions(wealth);
+    elements.wealthActions.innerHTML = actions.map((action, i) => `
+      <div class="action-item">
+        <div class="action-number">${i + 1}</div>
+        <div class="action-content">
+          <h4>${action.title}</h4>
+          <p>${action.desc}</p>
         </div>
       </div>
+    `).join('');
 
-      <div class="caution-box">
-        <h4>⚡ 주의할 점</h4>
-        <p>${career.caution}</p>
+    // 피해야 할 것
+    const avoids = generateWealthAvoids(wealth);
+    elements.wealthAvoid.innerHTML = avoids.map(avoid => `
+      <div class="avoid-item">
+        <span class="avoid-icon">🚫</span>
+        <p>${avoid}</p>
       </div>
-    `;
+    `).join('');
   }
 
   /**
-   * 재물/금전 탭 렌더링
+   * 재물 액션 플랜 생성
    */
-  function renderWealthTab(wealth) {
-    elements.wealthTab.innerHTML = `
-      <div class="analysis-section">
-        <h3 class="analysis-title">💰 재물 축적 성향</h3>
-        <p class="analysis-content">${wealth.accumulation.description}</p>
-      </div>
+  function generateWealthActions(wealth) {
+    const actions = [];
 
-      <div class="analysis-section">
-        <h3 class="analysis-title">📈 수입 스타일</h3>
-        <p class="analysis-content">${wealth.earning.description}</p>
-      </div>
+    if (wealth.accumulation.level === 'strong') {
+      actions.push({
+        title: '자산 포트폴리오를 다각화하세요',
+        desc: '재물운이 있으니 적극적으로 투자하되, 한 곳에 몰빵하지 마세요. 부동산, 주식, 예금을 적절히 분배하세요.'
+      });
+    } else if (wealth.accumulation.level === 'weak') {
+      actions.push({
+        title: '자동 저축 시스템을 만드세요',
+        desc: '월급날 자동이체로 최소 10%를 먼저 저축하세요. 의지에 의존하지 않는 시스템이 당신에게 필요합니다.'
+      });
+    }
 
-      <div class="analysis-section">
-        <h3 class="analysis-title">🎲 투자 성향</h3>
-        <p class="analysis-content">${wealth.investment.description}</p>
-      </div>
+    if (wealth.investment.style === 'aggressive') {
+      actions.push({
+        title: '투자 전 충분한 리서치를 하세요',
+        desc: '공격적인 투자 성향이 있어 큰 수익도 가능하지만, 충동적인 결정은 피하세요. 최소 1주일은 고민하세요.'
+      });
+    } else if (wealth.investment.style === 'conservative') {
+      actions.push({
+        title: '안전자산 위주로 포트폴리오를 구성하세요',
+        desc: '국채, 우량주, 적금 위주로 안정적인 수익을 추구하세요. 당신에게는 이게 더 맞습니다.'
+      });
+    }
 
-      <div class="tip-box">
-        <h4>💡 재물운 팁</h4>
-        <ul class="analysis-list">
-          ${wealth.tips.map(t => `<li>${t}</li>`).join('')}
-        </ul>
-      </div>
-    `;
+    actions.push({
+      title: '월별 재정 리뷰를 하세요',
+      desc: '매월 말일에 30분만 투자해서 수입/지출을 점검하세요. 새는 돈을 찾고 절약 포인트를 발견할 수 있습니다.'
+    });
+
+    actions.push({
+      title: '비상금 6개월치를 확보하세요',
+      desc: '월 생활비의 6배를 언제든 인출 가능한 계좌에 준비하세요. 이것이 투자의 첫걸음입니다.'
+    });
+
+    return actions.slice(0, 4);
   }
 
   /**
-   * 인간관계 탭 렌더링
+   * 재물 피해야 할 것 생성
    */
-  function renderRelationshipTab(relationship) {
-    elements.relationshipTab.innerHTML = `
-      <div class="analysis-section">
-        <h3 class="analysis-title">👥 대인관계 스타일</h3>
-        <p class="analysis-content">${relationship.style.description}</p>
-      </div>
+  function generateWealthAvoids(wealth) {
+    const avoids = [];
 
-      <div class="analysis-section">
-        <h3 class="analysis-title">💕 궁합 경향</h3>
-        <p class="analysis-content">${relationship.compatibility.description}</p>
-        <p class="analysis-content" style="margin-top: 12px;">${relationship.bestMatch.description}</p>
-      </div>
+    if (wealth.investment.style === 'aggressive') {
+      avoids.push('레버리지 투자나 빚내서 투자하는 것 - 당신의 공격적 성향과 만나면 위험합니다');
+    }
 
-      <div class="analysis-section">
-        <h3 class="analysis-title">⚔️ 갈등 패턴</h3>
-        <p class="analysis-content">${relationship.conflict.description}</p>
-      </div>
+    if (wealth.accumulation.level === 'weak') {
+      avoids.push('충동구매와 감정적 소비 - 구매 전 24시간 쿨다운 타임을 가지세요');
+    }
 
-      <div class="tip-box">
-        <h4>💡 관계 팁</h4>
-        <ul class="analysis-list">
-          ${relationship.tips.map(t => `<li>${t}</li>`).join('')}
-        </ul>
-      </div>
-    `;
+    avoids.push('보증 서는 것 - 아무리 가까운 사이라도 금전 보증은 피하세요');
+    avoids.push('전문가 상담 없이 큰 금액 투자하는 것 - 1000만원 이상은 전문가와 상의하세요');
+
+    return avoids.slice(0, 3);
   }
 
   /**
-   * 대운 타임라인 렌더링
+   * 인간관계 카드 렌더링
    */
-  function renderDaeunTimeline(daeunList, birthYear) {
+  function renderRelationshipCard(interpretation) {
+    const rel = interpretation.relationship;
+
+    // 관계 프로필
+    const relTypes = {
+      extrovert: { icon: '🌟', type: '사교적 연결형', desc: '많은 사람들과 어울리며 에너지를 얻습니다' },
+      introvert: { icon: '🎯', type: '깊이 있는 관계형', desc: '소수의 깊은 관계를 선호합니다' },
+      ambivert: { icon: '🔄', type: '상황 적응형', desc: '상황에 따라 유연하게 대처합니다' }
+    };
+    const rType = relTypes[rel.style.type];
+
+    elements.relationshipProfile.innerHTML = `
+      <div class="profile-type">
+        <div class="profile-type-icon">${rType.icon}</div>
+        <div class="profile-type-text">
+          <h4>${rType.type}</h4>
+          <p>${rType.desc}</p>
+        </div>
+      </div>
+      <p class="profile-description">${rel.style.description}</p>
+    `;
+
+    // 액션 플랜
+    const actions = generateRelationshipActions(rel);
+    elements.relationshipActions.innerHTML = actions.map((action, i) => `
+      <div class="action-item">
+        <div class="action-number">${i + 1}</div>
+        <div class="action-content">
+          <h4>${action.title}</h4>
+          <p>${action.desc}</p>
+        </div>
+      </div>
+    `).join('');
+
+    // 궁합 리스트
+    const compats = generateCompatibilityList(rel);
+    elements.compatibilityList.innerHTML = compats.map(c => `
+      <div class="compatibility-item">
+        <div class="compat-icon">${c.icon}</div>
+        <h4>${c.type}</h4>
+        <p>${c.desc}</p>
+      </div>
+    `).join('');
+
+    // 피해야 할 것
+    const avoids = generateRelationshipAvoids(rel);
+    elements.relationshipAvoid.innerHTML = avoids.map(avoid => `
+      <div class="avoid-item">
+        <span class="avoid-icon">🚫</span>
+        <p>${avoid}</p>
+      </div>
+    `).join('');
+  }
+
+  /**
+   * 관계 액션 플랜 생성
+   */
+  function generateRelationshipActions(rel) {
+    const actions = [];
+
+    if (rel.style.type === 'extrovert') {
+      actions.push({
+        title: '깊이 있는 관계에도 투자하세요',
+        desc: '많은 사람을 아는 것도 좋지만, 정말 중요한 5명과 깊은 관계를 유지하세요. 정기적으로 1:1 시간을 가지세요.'
+      });
+    } else if (rel.style.type === 'introvert') {
+      actions.push({
+        title: '안전한 범위에서 네트워크를 넓혀보세요',
+        desc: '한 달에 한 번, 새로운 사람 1명을 만나보세요. 당신의 페이스를 유지하면서도 관계를 확장할 수 있습니다.'
+      });
+    }
+
+    if (rel.conflict.type === 'direct') {
+      actions.push({
+        title: '갈등 상황에서 잠시 쉬어가세요',
+        desc: '화가 날 때 바로 대응하지 말고, 24시간 후에 대화하세요. 감정이 가라앉은 후 더 나은 해결책을 찾을 수 있습니다.'
+      });
+    } else if (rel.conflict.type === 'avoidant') {
+      actions.push({
+        title: '불편한 대화도 피하지 마세요',
+        desc: '작은 문제가 쌓이면 큰 갈등이 됩니다. 불편함을 느끼면 일주일 안에 대화로 해결하세요.'
+      });
+    }
+
+    actions.push({
+      title: '감사 표현을 습관화하세요',
+      desc: '하루에 한 번, 주변 사람에게 감사를 전하세요. 카톡 한 줄도 좋습니다. 관계가 따뜻해집니다.'
+    });
+
+    actions.push({
+      title: '경청하는 연습을 하세요',
+      desc: '대화할 때 상대방 말을 끝까지 듣고, 요약해서 되물어보세요. "그러니까 네 말은..." 이 한마디가 관계를 바꿉니다.'
+    });
+
+    return actions.slice(0, 4);
+  }
+
+  /**
+   * 궁합 리스트 생성
+   */
+  function generateCompatibilityList(rel) {
+    return [
+      { icon: '🎯', type: '목표 지향적인 사람', desc: '함께 성장할 수 있어요' },
+      { icon: '🤝', type: '신뢰를 중시하는 사람', desc: '안정적인 관계가 됩니다' },
+      { icon: '💡', type: '열린 마음을 가진 사람', desc: '서로 배울 수 있어요' },
+      { icon: '😊', type: '긍정적인 사람', desc: '함께하면 에너지가 나요' }
+    ];
+  }
+
+  /**
+   * 관계 피해야 할 것 생성
+   */
+  function generateRelationshipAvoids(rel) {
+    const avoids = [];
+
+    if (rel.conflict.type === 'direct') {
+      avoids.push('감정적일 때 중요한 대화하기 - 화가 나면 일단 자리를 피하세요');
+    }
+
+    avoids.push('일방적으로 퍼주기만 하는 관계 - Give and Take의 균형을 유지하세요');
+    avoids.push('부정적인 에너지를 주는 사람과 자주 만나기 - 당신의 에너지를 보호하세요');
+    avoids.push('SNS로만 관계를 유지하기 - 중요한 사람과는 실제로 만나세요');
+
+    return avoids.slice(0, 3);
+  }
+
+  /**
+   * 운세 카드 렌더링
+   */
+  function renderFortuneCard(interpretation) {
+    const timing = interpretation.timing;
     const currentYear = new Date().getFullYear();
-    const currentAge = currentYear - birthYear;
 
-    // 현재 대운 인덱스 찾기
-    let currentIndex = 0;
-    daeunList.forEach((d, index) => {
-      if (currentAge >= d.startAge && currentAge <= d.endAge) {
-        currentIndex = index;
-      }
-    });
-
-    // 표시할 범위 (현재 기준 앞뒤로)
-    const displayStart = Math.max(0, currentIndex - 1);
-    const displayEnd = Math.min(daeunList.length, displayStart + 5);
-    const displayDaeun = daeunList.slice(displayStart, displayEnd);
-
-    let html = '<div class="timeline-container">';
-
-    displayDaeun.forEach((d, index) => {
-      const isCurrent = displayStart + index === currentIndex;
-      const element = d.stem.element;
-
-      html += `
-        <div class="timeline-item ${isCurrent ? 'current' : ''}">
-          <div class="timeline-node" style="background-color: ${elementColors[element]};">
-            ${d.stem.hanja}${d.branch.hanja}
-          </div>
-          <div class="timeline-age">${d.startAge}-${d.endAge}세</div>
-          <div class="timeline-year">${d.startYear}-${d.endYear}</div>
-          ${index < displayDaeun.length - 1 ? '<div class="timeline-line"></div>' : ''}
-        </div>
-      `;
-    });
-
-    html += '</div>';
-
-    elements.daeunTimeline.innerHTML = html;
-  }
-
-  /**
-   * 세운 정보 렌더링
-   */
-  function renderSaeunInfo(currentYear) {
-    const element = currentYear.element;
-    const interp = currentYear.interpretation;
-
-    elements.saeunInfo.innerHTML = `
-      <div class="saeun-header">
-        <div class="saeun-pillar">
-          <div class="saeun-year">${currentYear.year}년</div>
-          <div class="saeun-stem-branch element-${elementClasses[element]}">
-            ${currentYear.stem.hanja}${currentYear.branch.hanja}
-          </div>
-        </div>
-        <div class="saeun-details">
-          <div class="saeun-theme">${interp.theme}</div>
-          <div class="saeun-description">${interp.opportunity}</div>
-        </div>
-      </div>
-      <div class="caution-box" style="margin-top: 16px;">
-        <h4>주의할 점</h4>
-        <p>${interp.caution}</p>
-      </div>
+    elements.fortuneSummary.innerHTML = `
+      <div class="fortune-year">${currentYear}</div>
+      <div class="fortune-theme">${timing.currentYear.interpretation.theme}</div>
+      <p class="fortune-description">${timing.currentYear.interpretation.opportunity}</p>
     `;
+
+    const yearActions = [
+      {
+        title: `${currentYear}년 상반기 집중 포인트`,
+        desc: timing.currentYear.interpretation.opportunity
+      },
+      {
+        title: `${currentYear}년 하반기 주의사항`,
+        desc: timing.currentYear.interpretation.caution
+      },
+      {
+        title: '올해의 성장 전략',
+        desc: '새로운 도전보다는 기존에 하던 일을 더 깊이 파고드세요. 기초를 탄탄히 하는 한 해로 만드세요.'
+      }
+    ];
+
+    elements.yearlyActions.innerHTML = yearActions.map((action, i) => `
+      <div class="action-item">
+        <div class="action-number">${i + 1}</div>
+        <div class="action-content">
+          <h4>${action.title}</h4>
+          <p>${action.desc}</p>
+        </div>
+      </div>
+    `).join('');
   }
 
   /**
@@ -601,7 +637,7 @@
       <div class="daily-tip-extras">
         <div class="daily-tip-extra">
           <span class="daily-tip-extra-icon">🎨</span>
-          <span>행운의 색상: ${tip.colorName}</span>
+          <span>오늘의 컬러: ${tip.colorName}</span>
         </div>
         <div class="daily-tip-extra">
           <span class="daily-tip-extra-icon">🧭</span>
@@ -616,61 +652,12 @@
   }
 
   /**
-   * 통합 이미지 렌더링
-   */
-  function renderJourneyImage(saju, interpretation, daeun) {
-    try {
-      const canvas = SajuImageGenerator.generateJourneyImage(saju, interpretation, daeun, {
-        width: 800,
-        height: 1200
-      });
-
-      // 캔버스를 컨테이너에 추가
-      elements.visualContainer.innerHTML = '';
-      elements.visualContainer.appendChild(canvas);
-      canvas.id = 'journeyCanvas';
-
-    } catch (error) {
-      console.error('이미지 생성 오류:', error);
-      elements.visualContainer.innerHTML = '<p style="color: #999; text-align: center;">이미지 생성 중 오류가 발생했습니다.</p>';
-    }
-  }
-
-  /**
-   * 탭 클릭 처리
-   */
-  function handleTabClick(e) {
-    const btn = e.currentTarget;
-    const tabId = btn.dataset.tab;
-
-    // 버튼 활성화 상태 변경
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    // 탭 컨텐츠 표시
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.getElementById(`${tabId}Tab`).classList.add('active');
-  }
-
-  /**
-   * 이미지 다운로드 처리
-   */
-  function handleDownloadImage() {
-    const canvas = document.getElementById('journeyCanvas');
-    if (canvas) {
-      SajuImageGenerator.downloadAsImage(canvas, `나의사주여정_${new Date().toLocaleDateString('ko-KR').replace(/\./g, '')}.png`);
-    } else {
-      alert('이미지를 생성할 수 없습니다.');
-    }
-  }
-
-  /**
    * 로컬 저장 처리
    */
   function handleSaveLocal() {
     if (currentResult) {
       localStorage.setItem('sajuResult', JSON.stringify(currentResult));
-      alert('결과가 저장되었습니다. 다음에 방문해도 결과를 확인할 수 있습니다.');
+      alert('결과가 저장되었습니다!');
     }
   }
 
@@ -678,47 +665,22 @@
    * 새로운 분석 처리
    */
   function handleNewAnalysis() {
-    // 결과 섹션 숨기기
     elements.resultSection.style.display = 'none';
     elements.inputSection.style.display = 'block';
-
-    // 폼 초기화
     elements.form.reset();
-
-    // 스크롤 상단으로
     window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    // 현재 결과 초기화
     currentResult = null;
   }
 
-  /**
-   * 로딩 표시
-   */
   function showLoading() {
     elements.inputSection.style.display = 'none';
     elements.loading.classList.add('active');
   }
 
-  /**
-   * 로딩 숨기기
-   */
   function hideLoading() {
     elements.loading.classList.remove('active');
   }
 
-  /**
-   * 툴팁 표시
-   */
-  function showTooltip(title, text) {
-    elements.tooltipTitle.textContent = title;
-    elements.tooltipText.textContent = text;
-    elements.tooltipPopup.classList.add('active');
-  }
-
-  /**
-   * 툴팁 닫기
-   */
   function closeTooltip() {
     elements.tooltipPopup.classList.remove('active');
   }

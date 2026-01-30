@@ -123,102 +123,159 @@
     <!-- 로딩 표시 -->
     <div class="loading" id="loading">
       <div class="loading-spinner"></div>
-      <p>사주를 분석하고 있습니다...</p>
+      <p>당신의 운명을 분석하고 있습니다...</p>
     </div>
 
     <!-- 결과 섹션 -->
     <section class="result-section" id="resultSection" style="display: none;">
 
-      <!-- 사주 구성표 -->
-      <div class="result-card" id="pillarsCard">
-        <h2 class="section-title">사주팔자 (四柱八字)</h2>
-        <div class="pillars-container" id="pillarsContainer">
+      <!-- 핵심 요약 카드 -->
+      <div class="result-card summary-card" id="summaryCard">
+        <div class="summary-header">
+          <div class="summary-icon" id="summaryIcon">🔥</div>
+          <div class="summary-text">
+            <h2 class="summary-title" id="summaryTitle">당신의 핵심 기질</h2>
+            <p class="summary-subtitle" id="summarySubtitle">열정적인 리더형</p>
+          </div>
+        </div>
+        <p class="summary-description" id="summaryDescription">
           <!-- 동적 생성 -->
+        </p>
+      </div>
+
+      <!-- 3대 관점 분석 - 직업/커리어 -->
+      <div class="result-card analysis-card" id="careerCard">
+        <div class="card-header">
+          <span class="card-icon">💼</span>
+          <h2 class="card-title">커리어 & 성장 전략</h2>
+        </div>
+
+        <div class="insight-section">
+          <h3 class="insight-title">🎯 당신의 강점</h3>
+          <div class="strength-grid" id="careerStrengths">
+            <!-- 동적 생성 -->
+          </div>
+        </div>
+
+        <div class="insight-section">
+          <h3 class="insight-title">📋 추천 액션 플랜</h3>
+          <div class="action-plan" id="careerActions">
+            <!-- 동적 생성 -->
+          </div>
+        </div>
+
+        <div class="insight-section">
+          <h3 class="insight-title">⚠️ 피해야 할 것</h3>
+          <div class="avoid-list" id="careerAvoid">
+            <!-- 동적 생성 -->
+          </div>
+        </div>
+
+        <div class="insight-section">
+          <h3 class="insight-title">🏆 추천 직업군</h3>
+          <div class="career-tags" id="careerTags">
+            <!-- 동적 생성 -->
+          </div>
         </div>
       </div>
 
-      <!-- 오행 분포 -->
-      <div class="result-card" id="elementsCard">
-        <h2 class="section-title">오행 분포 (五行分布)</h2>
-        <div class="elements-chart" id="elementsChart">
-          <!-- 동적 생성 -->
+      <!-- 3대 관점 분석 - 재물/금전 -->
+      <div class="result-card analysis-card" id="wealthCard">
+        <div class="card-header">
+          <span class="card-icon">💰</span>
+          <h2 class="card-title">재물 & 투자 전략</h2>
         </div>
-        <div class="yin-yang-balance" id="yinYangBalance">
-          <!-- 동적 생성 -->
+
+        <div class="insight-section">
+          <h3 class="insight-title">💵 당신의 재물 성향</h3>
+          <div class="wealth-profile" id="wealthProfile">
+            <!-- 동적 생성 -->
+          </div>
+        </div>
+
+        <div class="insight-section">
+          <h3 class="insight-title">📋 돈 관리 액션 플랜</h3>
+          <div class="action-plan" id="wealthActions">
+            <!-- 동적 생성 -->
+          </div>
+        </div>
+
+        <div class="insight-section">
+          <h3 class="insight-title">⚠️ 금전적 주의사항</h3>
+          <div class="avoid-list" id="wealthAvoid">
+            <!-- 동적 생성 -->
+          </div>
         </div>
       </div>
 
-      <!-- 3대 관점 분석 -->
-      <div class="result-card" id="analysisCard">
-        <h2 class="section-title">3대 관점 분석</h2>
-
-        <div class="tabs">
-          <button class="tab-btn active" data-tab="career">
-            <span class="tab-icon">💼</span>
-            직업/재능
-          </button>
-          <button class="tab-btn" data-tab="wealth">
-            <span class="tab-icon">💰</span>
-            재물/금전
-          </button>
-          <button class="tab-btn" data-tab="relationship">
-            <span class="tab-icon">💝</span>
-            인간관계
-          </button>
+      <!-- 3대 관점 분석 - 인간관계 -->
+      <div class="result-card analysis-card" id="relationshipCard">
+        <div class="card-header">
+          <span class="card-icon">💝</span>
+          <h2 class="card-title">관계 & 소통 전략</h2>
         </div>
 
-        <div class="tab-content active" id="careerTab">
-          <!-- 동적 생성 -->
+        <div class="insight-section">
+          <h3 class="insight-title">👥 당신의 관계 스타일</h3>
+          <div class="relationship-profile" id="relationshipProfile">
+            <!-- 동적 생성 -->
+          </div>
         </div>
-        <div class="tab-content" id="wealthTab">
-          <!-- 동적 생성 -->
+
+        <div class="insight-section">
+          <h3 class="insight-title">📋 관계 개선 액션 플랜</h3>
+          <div class="action-plan" id="relationshipActions">
+            <!-- 동적 생성 -->
+          </div>
         </div>
-        <div class="tab-content" id="relationshipTab">
-          <!-- 동적 생성 -->
+
+        <div class="insight-section">
+          <h3 class="insight-title">💕 이런 사람과 잘 맞아요</h3>
+          <div class="compatibility-list" id="compatibilityList">
+            <!-- 동적 생성 -->
+          </div>
+        </div>
+
+        <div class="insight-section">
+          <h3 class="insight-title">⚠️ 관계에서 주의할 점</h3>
+          <div class="avoid-list" id="relationshipAvoid">
+            <!-- 동적 생성 -->
+          </div>
         </div>
       </div>
 
-      <!-- 대운/세운 타임라인 -->
+      <!-- 올해의 운세 -->
       <div class="result-card" id="fortuneCard">
-        <h2 class="section-title">시간의 흐름 분석</h2>
-
-        <div class="fortune-section">
-          <h3 class="subsection-title">대운 (大運) - 10년 단위 흐름</h3>
-          <div class="daeun-timeline" id="daeunTimeline">
-            <!-- 동적 생성 -->
-          </div>
+        <div class="card-header">
+          <span class="card-icon">📅</span>
+          <h2 class="card-title">2024년 운세 & 전략</h2>
         </div>
 
-        <div class="fortune-section">
-          <h3 class="subsection-title">올해의 운세 (歲運)</h3>
-          <div class="saeun-info" id="saeunInfo">
+        <div class="fortune-summary" id="fortuneSummary">
+          <!-- 동적 생성 -->
+        </div>
+
+        <div class="insight-section">
+          <h3 class="insight-title">📋 올해 집중해야 할 것</h3>
+          <div class="action-plan" id="yearlyActions">
             <!-- 동적 생성 -->
           </div>
         </div>
       </div>
 
-      <!-- 오늘의 사주 팁 -->
+      <!-- 오늘의 팁 -->
       <div class="result-card" id="dailyTipCard">
-        <h2 class="section-title">오늘의 사주 팁</h2>
+        <div class="card-header">
+          <span class="card-icon">⚡</span>
+          <h2 class="card-title">오늘의 액션</h2>
+        </div>
         <div class="daily-tip" id="dailyTip">
           <!-- 동적 생성 -->
         </div>
       </div>
 
-      <!-- 통합 비주얼 이미지 -->
-      <div class="result-card" id="visualCard">
-        <h2 class="section-title">나의 사주 여정</h2>
-        <div class="visual-container" id="visualContainer">
-          <canvas id="journeyCanvas"></canvas>
-        </div>
-      </div>
-
       <!-- 저장/공유 버튼 -->
       <div class="action-buttons">
-        <button class="action-btn" id="downloadImageBtn">
-          <span class="btn-icon">📷</span>
-          이미지 저장
-        </button>
         <button class="action-btn" id="saveLocalBtn">
           <span class="btn-icon">💾</span>
           결과 저장
@@ -255,7 +312,6 @@
   <!-- 스크립트 로드 -->
   <script src="/saju-engine.js"></script>
   <script src="/saju-interpreter.js"></script>
-  <script src="/image-generator.js"></script>
   <script src="/main.js"></script>
 </body>
 </html>

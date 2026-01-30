@@ -540,6 +540,321 @@ body {
   background: var(--accent-gradient);
 }
 
+/* 요약 카드 */
+.summary-card {
+  background: var(--accent-gradient);
+  color: white;
+  text-align: center;
+  padding: var(--spacing-xxxl);
+}
+
+.summary-card::before {
+  display: none;
+}
+
+.summary-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.summary-icon {
+  font-size: 4rem;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+}
+
+.summary-text {
+  text-align: left;
+}
+
+.summary-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.9;
+  margin-bottom: var(--spacing-xs);
+}
+
+.summary-subtitle {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  letter-spacing: 0.05em;
+}
+
+.summary-description {
+  font-size: 1rem;
+  line-height: 1.8;
+  opacity: 0.95;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* 카드 헤더 */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.card-icon {
+  font-size: 2rem;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+}
+
+/* 인사이트 섹션 */
+.insight-section {
+  margin-bottom: var(--spacing-xl);
+}
+
+.insight-section:last-child {
+  margin-bottom: 0;
+}
+
+.insight-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* 강점 그리드 */
+.strength-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.strength-item {
+  background: var(--background-color);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  border-left: 4px solid var(--primary-color);
+  transition: all var(--transition-fast);
+}
+
+.strength-item:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-sm);
+}
+
+.strength-item h4 {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.strength-item p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* 액션 플랜 */
+.action-plan {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.action-item {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background: var(--background-color);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.action-item:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-sm);
+}
+
+.action-number {
+  width: 32px;
+  height: 32px;
+  background: var(--accent-gradient);
+  color: white;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.action-content {
+  flex: 1;
+}
+
+.action-content h4 {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.action-content p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* 피해야 할 것 리스트 */
+.avoid-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.avoid-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: rgba(255, 51, 102, 0.08);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--fire-color);
+}
+
+.avoid-item .avoid-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.avoid-item p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* 프로필 카드 */
+.wealth-profile,
+.relationship-profile {
+  background: var(--background-color);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+}
+
+.profile-type {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.profile-type-icon {
+  font-size: 2.5rem;
+}
+
+.profile-type-text h4 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--primary-color);
+  letter-spacing: 0.05em;
+}
+
+.profile-type-text p {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.profile-description {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+/* 궁합 리스트 */
+.compatibility-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.compatibility-item {
+  background: var(--background-color);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  text-align: center;
+  transition: all var(--transition-fast);
+}
+
+.compatibility-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.compatibility-item .compat-icon {
+  font-size: 2rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.compatibility-item h4 {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.compatibility-item p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* 운세 요약 */
+.fortune-summary {
+  background: var(--background-color);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+}
+
+.fortune-year {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--spacing-sm);
+}
+
+.fortune-theme {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.fortune-description {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
 /* 사주 기둥 */
 .pillars-container {
   display: flex;
